@@ -98,12 +98,6 @@ state <- data.frame(state.x77,region= state.region)
 xyplot(Life.Exp ~ Income | region, data = state, layout = c(4,1))
 
 
-#esta permite hacer transformaciones sobre los graficos
-library(ggplot2)
-data(mpg)
-qplot(displ,hwy,data=mpg)
-
-
 #añadir capas extra a un mismo grafico
 data(airquality)
 air <- transform(airquality, Month = factor(Month))
@@ -146,13 +140,88 @@ data(volcano)
 image(volcano, col = pal(20))
 
 
-#varios graficos con titulillos
+
+#Rápida (“quickplot”): qplot()–Completa: ggplot()
+#estas permiten hacer transformaciones sobre los graficos
+
+
+##qplot
+library(ggplot2)
+data(mpg)
+qplot(displ,hwy,data=mpg)
+library(ggplot2)
+
+
+data(mpg) 
+str (mpg)
+qplot(x = displ, y = hwy , data = mpg)
+
+#añadimos color, la columna drv asigna color
+qplot(x = displ, y = hwy, data = mpg, color = drv)
+
+#añadir una linea
+qplot(x = displ, y = hwy, data = mpg, geom= c("point","smooth"))
+
+#se puede sumar elementos geometricos:; En este caso una regresión lineal 'lm'
+?geom_smooth
+qplot(x = displ, y = hwy, data = mpg, color = drv) + geom_smooth(method= "lm")
+
+#histograma, barras stakadas, al solo poner 1 valor entiende que queremos barras
+qplot(x = hwy, data = mpg, fill= drv )
+
+#Facets (múltiples gráficas)
+#.~drv FILAS
+#drv~. COLUMNAS
+qplot(x = displ, y = hwy, data = mpg, facets = .~drv)
+qplot(x = hwy, data = mpg, facets = drv~., binwidth= 2)
+
+
+#Funcionesde densidad
+qplot(x = hwy, data = mpg, geom= "density")
+qplot(x = hwy, data = mpg, geom= "density", color = drv )
+
+
+##ggplot2
+
+ggplot(mpg, aes(displ, hwy, color = class)) + geom_point() #+ geom_line() + geom_histogram()
+
+#QuickReference:–http://sape.inf.usi.ch/quick-reference/ggplot2
+#Ejemplosdetallados:
+#http://www3.nd.edu/~steve/computing_with_data/11_geom_examples/ggplot_examples.html
+#http://www3.nd.edu/~steve/computing_with_data/12_Scales_themes/scales_themes.html
+
+
+
+#graficos con mapas
+#Librería“raster”
+
+#si el tipo de datos enviados a plot es tipo "raster", se overridea la fuinción
+library(raster)
+adm<- getData('GADM', country='ESP', level=4)
+cat <-(adm[adm$NAME_1=="Cataluña",])
+plot(cat  , bg="dodgerblue",  axes=T)
+plot(cat  , lwd=10, border="skyblue",  add =T)
+plot(cat,col="green4", add  =T)> grid()
+
+
+#mapas de google, hay que configurar una API KEY
+?register_google
+library(ggmap)
+ej <- get_map(location= "Mexico", source= "google", maptype= "terrain", zoom = 5)
+ggmap(ej)
+ej <- get_map(location=c(right=-85, left=-121, bottom=13, top=33), source="osm", color="bw")
+ggmap(ej)
 
 
 
 
+#Ejemplos/ Guías:
+#–http://www.r-bloggers.com/search/maps
+#–http://www.unomaha.edu/mahbubulmajumder/data-science/fall-2014/lectures/06-display-spatial-data/06-display-spatial-data.html#/2
+#–http://www.r-bloggers.com/r-beginners-plotting-locations-on-to-a-world-map/
+#–http://rpsychologist.com/working-with-shapefiles-projections-and-world-maps-in 
+#-ggplot•Referenciasútiles:
+#–http://www.gadm.org/country
+#–http://unstats.un.org/unsd/tradekb/Knowledgebase/Country-Code
 
-
-
-
-
+      
