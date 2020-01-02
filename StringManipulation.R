@@ -1,23 +1,22 @@
 
 
-###
-grep()
-nchar()
-paste()
+#↨Tostring
+a <- 1234
+as.character(a)
+toString(a)
+
+#Format String
 sprintf()
-substr()
-strsplit()
-regex()
-gregexpr()
+sprintf("%s scored %.2f percent", "Matthew", 72.3)
 
-##
-##Pattern matching and replacement
-?grep
-#return positions mattched
-grep("b+", c("abc", "bda", "cca a", "abd"), perl=TRUE, value=FALSE)
-#return strings mattched
-grep("b+", c("abc", "bda", "cca a", "abd"), perl=TRUE, value=TRUE)
+#texto
+tolower("MAYUS")
+toupper("minus")
 
+
+#trim
+library(stringr)
+str_trim("   ni tan sols   ")
 
 
 #recuento de letras
@@ -30,13 +29,6 @@ nchar(c("ni","tan","sols"))
 
 #Juntar strings
 paste("ni","tan","sols", sep= "-")
-
-
-
-#Format String
-sprintf()
-sprintf("%s scored %.2f percent", "Matthew", 72.3)
-
 
 
 #substring
@@ -62,18 +54,19 @@ out
 #?substr(str,out[1],out[2])
 
 
-#texto
-tolower("MAYUS")
-toupper("minus")
+
+##Pattern matching
+?grep
+#return positions mattched
+grep("b+", c("abc", "bda", "cca a", "abd"), perl=TRUE, value=FALSE)
+#return strings mattched
+grep("b+", c("abc", "bda", "cca a", "abd"), perl=TRUE, value=TRUE)
+
 
 #replacment
 sub("pattern_search", "replacement_string" , "Some pattern to find pattern_search and replaced by replacement_string")
 
 
-library(stringr)
-
-#trim
-str_trim("   ni tan sols   ")
 
 
 
