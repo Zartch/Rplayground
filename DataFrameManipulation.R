@@ -164,3 +164,13 @@ unlisted <- unlist(list)
 unlisted
 
 
+
+#Apply Custom functions with mutate
+library(dplyr)
+custom_func <- function(x,y,z){
+  return(x+y+z)
+}
+cf = Vectorize(custom_func)
+
+x <- mutate(x,new_row=cf(x$var1,x$var2,x$var3))
+
