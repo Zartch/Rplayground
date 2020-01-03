@@ -45,9 +45,11 @@ clearNulls <- function(x){
   return(x) 
 }
 
+#aplicamosla función
 links_text <- sapply(links_text,clearNulls)
 links_url <- sapply(links_url,clearNulls)
 
+#ahora sin nulos podemos quitar la lista y estos no desaparecerán
 links_url <- unlist(links_url)
 links_text <- unlist(links_text)
 
@@ -152,33 +154,28 @@ df4[df4$abs_url == df4$enlace,]$abs <- TRUE
 str(df4)
 
 
-
-
 library(ggplot2)
 #plot por frequencia
-#♥preparamos el lienzo
+#preparamos el lienzo
 par(mfrow = c(1,1))
-p1<-qplot(Freq, data=df4, color = abs,main="Frequencia enlaces relativos y absolutos")
+#aplicamos la función qplot, que nos mostrará la frequencia
+qplot(Freq, data=df4, color = abs,main="Frequencia enlaces relativos y absolutos")
 
 
-#♥preparamos el lienzo
+#preparamos el lienzo
 par(mfrow = c(2,2))
 #historigramas absolutos/relativos
-p2<-hist(subset(df4,abs==FALSE)$Freq, col="green",  main="Frequencia enlaces relativos")
-p3<-hist(subset(df4,abs==TRUE)$Freq, col="red", breaks = 5,  main="Frequencia enlaces absolutos")
+hist(subset(df4,abs==FALSE)$Freq, col="green",  main="Frequencia enlaces relativos")
+hist(subset(df4,abs==TRUE)$Freq, col="red", breaks = 5,  main="Frequencia enlaces absolutos")
 
 
 #2.2
 library(stringr)
 df5 <- df4
 df5$interno <- mapply(str_detect, df5$abs_url,target$url)
-p4<-barplot(table(df5$interno),col="wheat", main="Enlaces Internos")
+#grafico de barras
+barplot(table(df5$interno),col="wheat", main="Enlaces Internos")
 
 #2.3
+#grafico de tarta. 
 pie(table(df5$status),col="wheat", main="Url http Status")
-
-
-myPlotList = list(p1, p2, p3, p4)
-library("gridExtra")
-do.call(grid.arrange,  myPlotList)
-  
