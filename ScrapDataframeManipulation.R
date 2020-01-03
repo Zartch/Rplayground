@@ -5,10 +5,12 @@ library(pracma)
 #1.1
 #Definimos un target para el scraping
 target <- handle("http://www.myne-us.com")
+target <- handle("https://www.mediawiki.org")
 target$url
 
 #Descargamos el HTML 
 html <- GET( handle = target, path="/2010/08/from-0x90-to-0x4c454554-journey-into.html")  
+html <- GET( handle = target, path="/wiki/MediaWiki")  
 html
 
 #Parseamos como texto
@@ -83,7 +85,7 @@ df2
 #ponemos todos los enaces en absoluto
 to_absolute <- function(url,domain){
   #print(url)
-  a <- length (grep("http:", url )) > 0 | length (grep("www", url )) > 0
+  a <- length (grep("http", url )) > 0 | length (grep("www", url )) > 0
   if(startsWith(url , "//"))
   {
     url <- paste("http:",url, sep = "")
@@ -104,7 +106,7 @@ to_absolute <- function(url,domain){
 abs_url<- Vectorize(to_absolute)
 
 #aplicamos la función para poner nuestras url como absolutas
-df3 <- mutate(df2, enlace = abs_url(enlace, target$url))
+df3 <- mutate(df2, abs_url = abs_url(enlace, target$url))
 
 
 #Función para comprobar el status
@@ -134,13 +136,49 @@ get_httpstatus <- Vectorize(get_http_status)
 
 
 #Aplicamos la función a todo el dataframe
-df4 <- mutate(df3, status = get_httpstatus(enlace))
+df4 <- mutate(df3, status = get_httpstatus(abs_url))
 
 #podriamos aplicar la función con un vapply y no con un mutate
 #df5$newcolum <- vapply(df5$enlace, get_http_status, character(1)) 
 #View(df5)
 
 
+#Aplicar Graficos
+#2.1
+
+#creamos un nuevo campo para saber directamente si son relativas o absolutas
+df4$abs <- FALSE
+df4[df4$abs_url == df4$enlace,]$abs <- TRUE
+str(df4)
 
 
 
+
+library(ggplot2)
+#plot por frequencia
+#♥preparamos el lienzo
+par(mfrow = c(1,1))
+p1<-qplot(Freq, data=df4, color = abs,main="Frequencia enlaces relativos y absolutos")
+
+
+#♥preparamos el lienzo
+par(mfrow = c(2,2))
+#historigramas absolutos/relativos
+p2<-hist(subset(df4,abs==FALSE)$Freq, col="green",  main="Frequencia enlaces relativos")
+p3<-hist(subset(df4,abs==TRUE)$Freq, col="red", breaks = 5,  main="Frequencia enlaces absolutos")
+
+
+#2.2
+library(stringr)
+df5 <- df4
+df5$interno <- mapply(str_detect, df5$abs_url,target$url)
+p4<-barplot(table(df5$interno),col="wheat", main="Enlaces Internos")
+
+#2.3
+pie(table(df5$status),col="wheat", main="Url http Status")
+
+
+myPlotList = list(p1, p2, p3, p4)
+library("gridExtra")
+do.call(grid.arrange,  myPlotList)
+  
