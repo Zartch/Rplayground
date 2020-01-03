@@ -1,4 +1,6 @@
 #Analisis de datos con graficos
+#https://www.r-graph-gallery.com/index.html
+
 
 #download.file("https://github.com/humbertcostas/courses/blob/master/04_ExploratoryAnalysis/exploratoryGraphs/data/avgpm25.csv","avgpm25.csv")
 download.file("https://raw.githubusercontent.com/humbertcostas/courses/master/04_ExploratoryAnalysis/exploratoryGraphs/data/avgpm25.csv","avgpm25.csv")
@@ -28,6 +30,8 @@ air <- transform(airquality, Month = factor(Month))
 boxplot(Ozone ~ Month, air, xlab = "Month", ylab = "Ozone")
 
 
+
+
 #Histograma: por cada valor/rango indica la frequencia de cada valor
 hist(pollution$pm25, col = "green", breaks = 50)
 #añade la frequencia visible en el eje de cordenadas
@@ -50,7 +54,7 @@ barplot(table(pollution$region),col="wheat", main="Obs. Region")
 barplot(height = c(10,6,8,4,5))
 #Aañadimos titulo a cualquier grafico 
 title(main="some title")
-
+#https://www.r-graph-gallery.com/48-grouped-barplot-with-ggplot2.html
 
 
 #Grafico tarta
@@ -149,8 +153,6 @@ image(volcano, col = pal(20))
 library(ggplot2)
 data(mpg)
 qplot(displ,hwy,data=mpg)
-library(ggplot2)
-
 
 data(mpg) 
 str (mpg)
